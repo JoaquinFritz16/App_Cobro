@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Pago Pendiente</h1>
+<p>Tu pago está pendiente. Por favor espera la confirmación.</p>
+<a href="{{ url_for('products.list_products') }}">Volver a productos</a>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Pago Exitoso</h1>
+<p>¡Gracias por tu compra, {{ order.user.name }}!</p>
+<p>Total pagado: ${{ order.total }}</p>
+<a href="{{ url_for('products.list_products') }}">Volver a productos</a>
+{% endblock %}

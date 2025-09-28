@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Formulario Producto{% endblock %}
+
+{% block content %}
+<h1>{{ 'Editar Producto' if form.title.data else 'Nuevo Producto' }}</h1>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.title.label }}<br>{{ form.title(size=32) }}</p>
+    <p>{{ form.description.label }}<br>{{ form.description(cols=30, rows=4) }}</p>
+    <p>{{ form.price.label }}<br>{{ form.price() }}</p>
+    <p>{{ form.available.label }} {{ form.available() }}</p>
+    <p>{{ form.submit() }}</p>
+</form>
+
+{% for message in get_flashed_messages() %}
+<p style="color:red;">{{ message }}</p>
+{% endfor %}
+{% endblock %}

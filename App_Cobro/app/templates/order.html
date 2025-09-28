@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Detalle del Pedido #{{ order.id }}</h1>
+
+<p><strong>Usuario:</strong> {{ order.user.name }} ({{ order.user.email }})</p>
+<p><strong>Total:</strong> ${{ order.total }}</p>
+<p><strong>Estado:</strong> {{ order.status }}</p>
+<p><strong>Fecha:</strong> {{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+
+<h2>Productos</h2>
+{% if order.items %}
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order.items %}
+        <tr>
+            <td>{{ item.product.title }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.price }}</td>
+            <td>${{ item.price * item.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No hay productos en este pedido.</p>
+{% endif %}
+
+{% if order.status == 'pending' %}
+    <a href="{{ url_for('payments.create_preference', order_id=order.id) }}">Pagar Pedido</a>
+{% endif %}
+
+<br><br>
+<a href="{{ url_for('orders.list_orders') }}">Volver a mis pedidos</a>
+{% endblock %}

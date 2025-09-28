@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lista de productos</h1>
+{% for product in products %}
+<tr>
+    <td>{{ product.title }}</td>
+    <td>{{ product.description }}</td>
+    <td>${{ product.price }}</td>
+    <td>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('orders.create_order', product_id=product.id) }}">Agregar al pedido</a>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}">Login para comprar</a>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+
+{% endblock %}

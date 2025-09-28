@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Pedidos{% endblock %}
+
+{% block content %}
+<h1>Mis Pedidos</h1>
+
+{% if orders %}
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>${{ order.total }}</td>
+            <td>{{ order.status }}</td>
+            <td>
+                <a href="{{ url_for('orders.view_order', id=order.id) }}">Ver detalle</a>
+                {% if order.status == 'pending' %}
+                    | <a href="{{ url_for('payments.create_preference', order_id=order.id) }}">Pagar</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No tienes pedidos aún.</p>
+{% endif %}
+
+{% endblock %}
