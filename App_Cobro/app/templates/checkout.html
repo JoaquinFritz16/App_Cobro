@@ -1,35 +1,27 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <h1>Checkout</h1>
 
-{% if items %}
-  <p>Productos de la orden:</p>
-  <ul>
-    {% for item in items %}
-      <li>{{ item['title'] }} x {{ item['quantity'] }} = ${{ item['unit_price'] }}</li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>No hay productos en esta orden.</p>
-{% endif %}
+<p>Productos de la orden:</p>
+<ul>
+  {% for item in items %}
+  <li>{{ item.title }} x {{ item.quantity }} = ${{ item.unit_price }}</li>
+  {% endfor %}
+</ul>
 
-<div id="checkout-btn"></div>
+<div id="wallet_container"></div>
 
-<!-- SDK de MercadoPago -->
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 <script>
-  // Inicializa MercadoPago con la clave pública
   const mp = new MercadoPago("{{ mp_public_key }}", { locale: "es-AR" });
 
-  // Renderiza el botón de checkout
   mp.checkout({
     preference: {
-      id: "{{ preference['id'] }}",
+      id: "{{ preference.id }}",
     },
     render: {
-      container: "#checkout-btn",
-      label: "Pagar",
+      container: "#wallet_container",
+      label: "Pagar con Mercado Pago",
     },
   });
 </script>

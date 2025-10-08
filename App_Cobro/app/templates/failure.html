@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>❌ Pago rechazado</h1>
+<p>Tu pago no se pudo procesar.</p>
+<a href="{{ url_for('orders.list_orders') }}">Volver a mis pedidos</a>
+{% endblock %}

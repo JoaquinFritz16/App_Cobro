@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>🕒 Pago pendiente</h1>
+<p>Tu pago está en revisión. Te avisaremos cuando se confirme.</p>
+<a href="{{ url_for('orders.list_orders') }}">Volver a mis pedidos</a>
+{% endblock %}
