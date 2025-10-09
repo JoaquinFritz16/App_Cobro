@@ -1,20 +1,40 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1>Lista de productos</h1>
-{% for product in products %}
-<tr>
-    <td>{{ product.title }}</td>
-    <td>{{ product.description }}</td>
-    <td>${{ product.price }}</td>
-    <td>
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Lista de Productos</h4>
+    </div>
+    <div class="card-body">
         {% if current_user.is_authenticated %}
-            <a href="{{ url_for('orders.create_order', product_id=product.id) }}">Agregar al pedido</a>
-        {% else %}
-            <a href="{{ url_for('auth.login') }}">Login para comprar</a>
+        <a href="{{ url_for('products.new_product') }}" class="btn btn-success mb-3">
+            <i class="bi bi-plus-circle"></i> Agregar Producto
+        </a>
         {% endif %}
-    </td>
-</tr>
-{% endfor %}
 
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.title }}</h5>
+                        <p class="card-text">{{ product.description|truncate(100) }}</p>
+                        <h6 class="text-end text-primary">${{ "%.2f"|format(product.price) }}</h6>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('orders.create_order', product_id=product.id) }}" class="btn btn-primary w-100">
+                            <i class="bi bi-cart-plus"></i> Comprar
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-box-arrow-in-right"></i> Login para comprar
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

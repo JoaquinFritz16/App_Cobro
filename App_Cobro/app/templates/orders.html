@@ -1,38 +1,52 @@
 {% extends 'base.html' %}
-
 {% block title %}Mis Pedidos{% endblock %}
-
 {% block content %}
-<h1>Mis Pedidos</h1>
-
-{% if orders %}
-<table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Total</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for order in orders %}
-        <tr>
-            <td>{{ order.id }}</td>
-            <td>${{ order.total }}</td>
-            <td>{{ order.status }}</td>
-            <td>
-                <a href="{{ url_for('orders.view_order', id=order.id) }}">Ver detalle</a>
-                {% if order.status == 'pending' %}
-                    | <a href="{{ url_for('payments.create_preference', order_id=order.id) }}">Pagar</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No tienes pedidos aún.</p>
-{% endif %}
-
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Mis Pedidos</h4>
+    </div>
+    <div class="card-body">
+        {% if orders %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.created_at.strftime('%d/%m/%Y') }}</td>
+                        <td>${{ "%.2f"|format(order.total) }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if order.status == 'paid' else 'warning' if order.status == 'pending' else 'danger' }}">
+                                {{ order.status|upper }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('orders.view_order', id=order.id) }}" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i> Ver detalle
+                            </a>
+                            {% if order.status == 'pending' %}
+                            <a href="{{ url_for('payments.create_preference', order_id=order.id) }}" class="btn btn-sm btn-success">
+                                <i class="bi bi-credit-card"></i> Pagar
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">No tienes pedidos aún.</div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

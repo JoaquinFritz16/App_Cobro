@@ -1,0 +1,8 @@
+/* Ejemplo: Cambiar el color primario */
+:root {
+    --bs-primary: #4e73df;
+}
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+}

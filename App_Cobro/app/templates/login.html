@@ -1,24 +1,37 @@
 {% extends 'base.html' %}
-
-{% block title %}Login{% endblock %}
-
+{% block title %}Iniciar Sesión{% endblock %}
 {% block content %}
-<h1>Login</h1>
-
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.email.label }}<br>
-        {{ form.email(size=32) }}
-    </p>
-    <p>
-        {{ form.password.label }}<br>
-        {{ form.password(size=32) }}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
-
-{% for message in get_flashed_messages() %}
-<p style="color:red;">{{ message }}</p>
-{% endfor %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control", placeholder="tu@email.com") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control", placeholder="Contraseña") }}
+                        </div>
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                    {% for message in get_flashed_messages() %}
+                    <div class="alert alert-danger mt-3">{{ message }}</div>
+                    {% endfor %}
+                    <div class="mt-3 text-center">
+                        <p>¿No tienes cuenta? <a href="{{ url_for('auth.register') }}">Regístrate aquí</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

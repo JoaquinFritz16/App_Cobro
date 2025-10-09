@@ -4,7 +4,6 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from dotenv import load_dotenv
 import os
-
 load_dotenv()
 
 

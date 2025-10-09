@@ -1,43 +1,61 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1>Detalle del Pedido #{{ order.id }}</h1>
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Detalle del Pedido #{{ order.id }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <p><strong>Usuario:</strong> {{ order.user.name }} ({{ order.user.email }})</p>
+                <p><strong>Fecha:</strong> {{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <h5 class="mb-0">Total: ${{ "%.2f"|format(order.total) }}</h5>
+                <span class="badge bg-{{ 'success' if order.status == 'paid' else 'warning' if order.status == 'pending' else 'danger' }}">
+                    {{ order.status|upper }}
+                </span>
+            </div>
+        </div>
 
-<p><strong>Usuario:</strong> {{ order.user.name }} ({{ order.user.email }})</p>
-<p><strong>Total:</strong> ${{ order.total }}</p>
-<p><strong>Estado:</strong> {{ order.status }}</p>
-<p><strong>Fecha:</strong> {{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+        <h5 class="mb-3">Productos</h5>
+        {% if order.items %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items %}
+                    <tr>
+                        <td>{{ item.product.title }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ "%.2f"|format(item.price) }}</td>
+                        <td>${{ "%.2f"|format(item.price * item.quantity) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">No hay productos en este pedido.</div>
+        {% endif %}
 
-<h2>Productos</h2>
-{% if order.items %}
-<table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio unitario</th>
-            <th>Subtotal</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in order.items %}
-        <tr>
-            <td>{{ item.product.title }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>${{ item.price }}</td>
-            <td>${{ item.price * item.quantity }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No hay productos en este pedido.</p>
-{% endif %}
-
-{% if order.status == 'pending' %}
-    <a href="{{ url_for('payments.create_preference', order_id=order.id) }}">Pagar Pedido</a>
-{% endif %}
-
-<br><br>
-<a href="{{ url_for('orders.list_orders') }}">Volver a mis pedidos</a>
+        <div class="d-flex justify-content-between mt-4">
+            {% if order.status == 'pending' %}
+            <a href="{{ url_for('payments.create_preference', order_id=order.id) }}" class="btn btn-success">
+                <i class="bi bi-credit-card"></i> Pagar Pedido
+            </a>
+            {% endif %}
+            <a href="{{ url_for('orders.list_orders') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a mis pedidos
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}

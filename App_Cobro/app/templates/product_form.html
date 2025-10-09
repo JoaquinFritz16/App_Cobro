@@ -1,20 +1,39 @@
 {% extends 'base.html' %}
-
-{% block title %}Formulario Producto{% endblock %}
-
+{% block title %}{{ 'Editar Producto' if form.title.data else 'Nuevo Producto' }}{% endblock %}
 {% block content %}
-<h1>{{ 'Editar Producto' if form.title.data else 'Nuevo Producto' }}</h1>
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">{{ 'Editar Producto' if form.title.data else 'Nuevo Producto' }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST" class="needs-validation" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control", size=32) }}
+                <div class="invalid-feedback">{{ form.title.errors[0] if form.title.errors else '' }}</div>
+            </div>
+            <div class="mb-3">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control", cols=30, rows=4) }}
+            </div>
+            <div class="mb-3">
+                {{ form.price.label(class="form-label") }}
+                {{ form.price(class="form-control") }}
+                <div class="invalid-feedback">{{ form.price.errors[0] if form.price.errors else '' }}</div>
+            </div>
+            <div class="mb-3 form-check">
+                {{ form.available(class="form-check-input") }}
+                {{ form.available.label(class="form-check-label") }}
+            </div>
+            <div class="d-grid gap-2">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
 
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <p>{{ form.title.label }}<br>{{ form.title(size=32) }}</p>
-    <p>{{ form.description.label }}<br>{{ form.description(cols=30, rows=4) }}</p>
-    <p>{{ form.price.label }}<br>{{ form.price() }}</p>
-    <p>{{ form.available.label }} {{ form.available() }}</p>
-    <p>{{ form.submit() }}</p>
-</form>
-
-{% for message in get_flashed_messages() %}
-<p style="color:red;">{{ message }}</p>
-{% endfor %}
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger mt-3">{{ message }}</div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

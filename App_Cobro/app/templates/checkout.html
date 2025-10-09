@@ -1,20 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Checkout</h1>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Checkout</h4>
+    </div>
+    <div class="card-body">
+        <h5 class="mb-3">Productos de la orden</h5>
+        <ul class="list-group mb-3">
+            {% for item in items %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ item.title }} x {{ item.quantity }}</span>
+                <span class="badge bg-primary rounded-pill">${{ "%.2f"|format(item.unit_price * item.quantity) }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <h4 class="text-end mb-4">Total: ${{ "%.2f"|format(order.total) }}</h4>
 
-<p>Productos de la orden:</p>
-<ul>
-  {% for item in items %}
-  <li>{{ item.title }} x {{ item.quantity }} = ${{ item.unit_price }}</li>
-  {% endfor %}
-</ul>
+        <!-- Contenedor para Mercado Pago -->
+        <div id="wallet_container"></div>
+    </div>
+</div>
 
-<div id="wallet_container"></div>
-
+<!-- Script de Mercado Pago (después del contenedor) -->
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 <script>
   const mp = new MercadoPago("{{ mp_public_key }}", { locale: "es-AR" });
-
   mp.checkout({
     preference: {
       id: "{{ preference.id }}",
@@ -25,4 +35,23 @@
     },
   });
 </script>
+
+{% if current_user.is_authenticated %}
+<div class="card">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Pagar con saldo ficticio</h5>
+    </div>
+    <div class="card-body">
+        <p class="mb-3">Tu saldo: <strong>${{ "%.2f"|format(current_user.wallet_balance) }}</strong></p>
+        <form action="{{ url_for('payments.pay_with_wallet', order_id=order.id) }}" method="POST">
+            <button type="submit" class="btn btn-primary {% if current_user.wallet_balance < order.total %}disabled{% endif %}">
+                <i class="bi bi-wallet2"></i> Pagar con saldo ficticio
+            </button>
+            {% if current_user.wallet_balance < order.total %}
+            <p class="text-danger mt-2 mb-0">Saldo insuficiente</p>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
